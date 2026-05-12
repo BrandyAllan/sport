@@ -24,11 +24,13 @@
           <small style="color:var(--accent);font-size:0.78rem;margin-top:3px;">Cet email est déjà utilisé.</small>
         </div>
         <div class="form-group mb-3">
-          <label class="form-label">Mot de passe</label>
-          <input type="password" class="form-control" name="password" id="password" placeholder="8 caractères minimum" />
-              <button type="button" id="togglePassword" class="btn-toggle">
-                <i class="bi bi-eye" id="toggleIcon"></i>
-            </button>
+            <label class="form-label">Mot de passe</label>
+            <div class="input-group-password"> 
+              <input type="password" class="form-control" name="password" id="password" placeholder="8 caractères minimum" />
+                <button type="button" id="togglePassword" class="btn-eye-toggle"> 
+                  <i class="bi bi-eye" id="toggleIcon"></i>
+                </button>
+            </div>
         </div>
 
         <button type="submit" class="btn-primary-custom">Créer mon compte</button>
