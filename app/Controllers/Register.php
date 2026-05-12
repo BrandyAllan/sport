@@ -28,7 +28,7 @@ class Register extends BaseController
         if (strlen($password) < 8) {
 
             return redirect()->back()->with(
-                'error',
+                'error_password',
                 'Le mot de passe doit contenir au moins 8 caractères.'
             );
         }
@@ -36,7 +36,7 @@ class Register extends BaseController
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
             return redirect()->back()->with(
-                'error',
+                'error_mail',
                 'Veuillez entrer un email valide.'
             );
         }
@@ -50,7 +50,7 @@ class Register extends BaseController
         if ($existingUser) {
 
             return redirect()->back()->with(
-                'error',
+                'error_mail',
                 'Cet email est déjà utilisé.'
             );
         }

@@ -4,11 +4,25 @@
     <section id="page-creneaux" style="padding-top:1rem;">
 
   <nav class="nav-public">
-    <a href="#" class="brand">Fit<span>Space</span></a>
-    <div class="nav-links">
-      <a href="#page-dashboard-client">Mon espace</a>
-      <a href="#">Déconnexion</a>
-    </div>
+    <a href="/" class="brand">Fit<span>Space</span></a>
+    <?php if(session()->get('logged_in')): ?>
+
+      <div class="nav-links">
+        <a href="#page-dashboard-client">Mon espace</a>
+        <a href="/logout">Déconnexion</a>
+      </div>
+
+    <?php else: ?>
+
+        <div class="nav-links">
+          <a href="/creneau">Nos créneaux</a>
+          <a href="/tarifs">Tarifs</a>
+          <a href="/login">Connexion</a>
+          <a href="/register" class="btn-nav-primary">S'inscrire</a>
+        </div>
+
+    <?php endif; ?>
+    
   </nav>
 
   <div class="page-section">

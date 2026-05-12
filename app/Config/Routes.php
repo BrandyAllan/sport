@@ -12,3 +12,6 @@ $routes->post('/login', 'Login::doLogin');
 $routes->get('/creneau', 'Creneau::index');
 
 $routes->get('/register', 'Register::showRegister');
+$routes->post('/register', 'Register::doRegister');
+
+$routes->get('/logout', 'Login::logout');
