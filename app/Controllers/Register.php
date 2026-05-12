@@ -8,7 +8,7 @@ class Register extends BaseController
 {
     public function showRegister(): string
     {
-        return view('register');
+        return view('auth/register');
     }
 
     public function doRegister()
