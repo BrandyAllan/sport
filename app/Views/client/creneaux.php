@@ -105,4 +105,4 @@
 
   <div class="footer-public">FitSpace &copy; 2025 — Projet CodeIgniter 4 · Tous droits <span>réservés</span></div>
 </section>
-<?=this->endSection() ?>
+<?= $this->endSection() ?>
