@@ -24,7 +24,6 @@ class Creneau extends BaseController
                 ressources.description
             ')
             ->join('ressources', 'ressources.id = creneaux.ressource_id')
-            ->where('creneaux.actif', 1)
             ->orderBy('creneaux.date_debut', 'ASC')
             ->findAll();
 

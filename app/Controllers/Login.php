@@ -41,10 +41,23 @@ class Login extends BaseController
             );
         }
 
+        if($user['role'] === 'admin') {
+            session()->set([
+                'user_id'    => $user['id'],
+                'user_name'  => $user['nom'],
+                'user_email' => $user['email'],
+                'role'       => 'admin',
+                'logged_in'  => true
+            ]);
+
+            return redirect()->to('/admin/dashboard');
+        }
+
         session()->set([
             'user_id'    => $user['id'],
             'user_name'  => $user['nom'],
             'user_email' => $user['email'],
+            'role'       => 'client',
             'logged_in'  => true
         ]);
 

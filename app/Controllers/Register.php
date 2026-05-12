@@ -89,6 +89,8 @@ class Register extends BaseController
 
             'user_email' => $email,
 
+            'role' => 'client',
+
             'logged_in' => true
         ]);
 
