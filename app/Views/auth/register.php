@@ -10,7 +10,7 @@
       <div class="auth-logo">Fit<span>Space</span></div>
       <div class="auth-subtitle">Créez votre compte client gratuitement.</div>
 
-      <form>
+      <form action="/register" method="post">
         <div class="form-grid-2 mb-3">
           <div class="form-group">
             <label class="form-label">Prénom</label>
@@ -39,7 +39,7 @@
       </form>
 
       <hr class="auth-divider" />
-      <div class="auth-footer">Déjà inscrit ? <a href="#page-login">Se connecter</a></div>
+      <div class="auth-footer">Déjà inscrit ? <a href="/login">Se connecter</a></div>
     </div>
   </div>
 </section>

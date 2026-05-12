@@ -16,7 +16,7 @@
         Email ou mot de passe incorrect.
       </div>
 
-      <form>
+      <form action="/login" method="post">
         <div class="form-group mb-3">
           <label class="form-label">Adresse email</label>
           <input type="email" class="form-control" placeholder="votre@email.com" />
@@ -29,7 +29,7 @@
       </form>
 
       <hr class="auth-divider" />
-      <div class="auth-footer">Pas encore de compte ? <a href="#page-inscription">Créer un compte</a></div>
+      <div class="auth-footer">Pas encore de compte ? <a href="/register">Créer un compte</a></div>
     </div>
   </div>
 </section>
