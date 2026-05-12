@@ -9,47 +9,46 @@ class Login extends BaseController
         return view('auth/login');
     }
 
-    public function doLogin() {
-        $data = $this->request->getJSON(true);
-
-        $email = $data['email'] ?? '';
-        $pwd   = $data['password'] ?? '';
+    public function doLogin()
+    {
+        $email = $this->request->getPost('email');
+        $pwd   = $this->request->getPost('password');
 
         if (!$email || !$pwd) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Veuillez remplir tous les champs.'
-            ]);
+
+            return redirect()->back()->with('error', 
+                'Veuillez remplir tous les champs.'
+            );
         }
 
         $userModel = new UserModel();
-        $user = $userModel->where('email', $email)->first();
+
+        $user = $userModel
+                    ->where('email', $email)
+                    ->first();
 
         if (!$user) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Email ou mot de passe incorrect.'
-            ]);
+
+            return redirect()->back()->with('error',
+                'Email ou mot de passe incorrect.'
+            );
         }
 
         if (!password_verify($pwd, $user['password'])) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Email ou mot de passe incorrect.'
-            ]);
+
+            return redirect()->back()->with('error',
+                'Email ou mot de passe incorrect.'
+            );
         }
 
         session()->set([
-            'user_id' => $user['id'],
-            'user_name' => $user['name'],
+            'user_id'    => $user['id'],
+            'user_name'  => $user['nom'],
             'user_email' => $user['email'],
-            'logged_in' => true
+            'logged_in'  => true
         ]);
 
-        return $this->response->setJSON([
-            'success' => true,
-            'message' => 'Connexion réussie.'
-        ]);
+        return redirect()->to('/creneau');
     }
 
     public function logout()

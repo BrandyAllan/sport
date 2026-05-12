@@ -11,10 +11,15 @@
       <div class="auth-subtitle">Bienvenue ! Connectez-vous à votre espace.</div>
 
       <!-- Flashdata erreur CI4 -->
-      <div class="flash-message flash-error">
-        <i class="bi bi-exclamation-circle-fill"></i>
-        Email ou mot de passe incorrect.
-      </div>
+      <?php if(session()->getFlashdata('error')): ?>
+
+          <div class="flash-message flash-error">
+              <i class="bi bi-exclamation-circle-fill"></i>
+
+              <?= session()->getFlashdata('error') ?>
+          </div>
+
+      <?php endif; ?>
 
       <form action="/login" method="post">
         <div class="form-group mb-3">
