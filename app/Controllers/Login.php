@@ -6,7 +6,7 @@ use App\Models\UserModel;
 class Login extends BaseController
 {
     public function showLogin(): string {
-        return view('login');
+        return view('auth/login');
     }
 
     public function doLogin() {
