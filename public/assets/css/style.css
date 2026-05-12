@@ -257,6 +257,40 @@
     .auth-footer { text-align: center; margin-top: 1.25rem; font-size: 0.85rem; color: var(--muted); }
     .auth-footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
 
+    /* ─── AJOUT POUR L'ICÔNE OEIL (PASSWORD TOGGLE) ────────── */
+
+/* Le conteneur pour l'input et l'oeil */
+.input-group-password {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+/* L'input lui-même */
+.input-group-password .form-control {
+    width: 100%;
+    padding-right: 40px; /* Pour ne pas écrire sur l'oeil */
+}
+
+/* Le bouton de l'oeil */
+.btn-eye-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+}
+
+.btn-eye-toggle:hover {
+    color: var(--accent);
+}
+
     /* ─── LAYOUT DASHBOARD (client & admin) ────────────────── */
     .app-wrapper { display: flex; min-height: 100vh; }
 

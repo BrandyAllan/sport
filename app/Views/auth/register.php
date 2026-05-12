@@ -24,13 +24,15 @@
           <small style="color:var(--accent);font-size:0.78rem;margin-top:3px;">Cet email est déjà utilisé.</small>
         </div>
         <div class="form-group mb-3">
-          <label class="form-label">Mot de passe</label>
-          <input type="password" class="form-control" name="password" placeholder="8 caractères minimum" />
+            <label class="form-label">Mot de passe</label>
+            <div class="input-group-password"> 
+              <input type="password" class="form-control" name="password" id="password" placeholder="8 caractères minimum" />
+                <button type="button" id="togglePassword" class="btn-eye-toggle"> 
+                  <i class="bi bi-eye" id="toggleIcon"></i>
+                </button>
+            </div>
         </div>
-        <div class="form-group mb-4">
-          <label class="form-label">Confirmer le mot de passe</label>
-          <input type="password" class="form-control" name="password_confirm" placeholder="Retapez votre mot de passe" />
-        </div>
+
         <button type="submit" class="btn-primary-custom">Créer mon compte</button>
       </form>
 
@@ -40,3 +42,19 @@
   </div>
 </section>
 <?= $this->endSection() ?>
+
+
+<script>
+  const passwordInput = document.getElementById('password');
+  const togglePassword = document.getElementById('togglePassword');
+  const toggleIcon = document.getElementById('toggleIcon');
+  togglePassword.addEventListener('click', function () {
+    // Basculer le type entre 'password' et 'text'
+    const isPassword = passwordInput.getAttribute('type') === 'password';
+    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+    
+    // Basculer l'icône Bootstrap (oeil ouvert / oeil barré)
+    toggleIcon.classList.toggle('bi-eye');
+    toggleIcon.classList.toggle('bi-eye-slash');
+});
+</script>
