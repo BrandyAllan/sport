@@ -11,14 +11,13 @@
       <div class="auth-subtitle">Créez votre compte client gratuitement.</div>
 
       <form action="/register" method="post">
-        <div class="form-grid-2 mb-3">
-          <?php if(session()->getFlashdata('error')): ?>
+        <?php if(session()->getFlashdata('error')): ?>
           <div class="flash-message flash-error">
               <i class="bi bi-exclamation-circle-fill"></i>
               <?= session()->getFlashdata('error') ?>
           </div>
-          <?php endif; ?>
-          
+        <?php endif; ?>
+        <div class="form-grid-2 mb-3">          
           <div class="form-group">
             <label class="form-label">Nom</label>
             <input type="text" class="form-control" name="nom" placeholder="Dupont" />
