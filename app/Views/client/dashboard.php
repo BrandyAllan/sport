@@ -54,22 +54,22 @@
         <div class="metrics-row">
           <div class="metric-card">
             <div class="metric-icon yellow"><i class="bi bi-hourglass-split"></i></div>
-            <div class="metric-value">2</div>
+            <div class="metric-value"><?= $en_attente ?></div>
             <div class="metric-label">En attente</div>
           </div>
           <div class="metric-card">
             <div class="metric-icon green"><i class="bi bi-check-circle-fill"></i></div>
-            <div class="metric-value">5</div>
+            <div class="metric-value"><?= $confirmees ?></div>
             <div class="metric-label">Confirmées</div>
           </div>
           <div class="metric-card">
             <div class="metric-icon red"><i class="bi bi-x-circle-fill"></i></div>
-            <div class="metric-value">1</div>
+            <div class="metric-value"><?= $annulees ?></div>
             <div class="metric-label">Annulées</div>
           </div>
           <div class="metric-card">
             <div class="metric-icon blue"><i class="bi bi-calendar-check"></i></div>
-            <div class="metric-value">3</div>
+            <div class="metric-value"><?= $a_venir ?></div>
             <div class="metric-label">À venir</div>
           </div>
         </div>
@@ -91,22 +91,29 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="td-name">Yoga Détente</td>
-                <td class="td-muted">Lun 16 juin 2025</td>
-                <td class="td-muted">08h00 – 09h30</td>
-                <td><span class="badge-statut s-attente">en attente</span></td>
-                <td>
-                  <button class="btn-sm-custom btn-cancel"><i class="bi bi-x"></i> Annuler</button>
-                </td>
-              </tr>
-              <tr>
-                <td class="td-name">Salle musculation</td>
-                <td class="td-muted">Mar 17 juin 2025</td>
-                <td class="td-muted">10h00 – 12h00</td>
-                <td><span class="badge-statut s-confirmee">confirmée</span></td>
-                <td><span style="font-size:0.75rem;color:var(--muted);">—</span></td>
-              </tr>
+              <?php foreach($reservations as $res): ?>
+                <tr>
+                  <td class="td-name">Yoga Détente</td>
+                  <td class="td-muted">Lun 16 juin 2025</td>
+                  <td class="td-muted">08h00 – 09h30</td>
+                  <?php if($res['statut'] === 'en_attente') { ?>
+                    <td><span class="badge-statut s-attente">en attente</span></td>
+                    <td>
+                      <button class="btn-sm-custom btn-cancel"><i class="bi bi-x"></i> Annuler</button>
+                    </td>
+                  <?php } elseif($res['statut'] === 'confirmee') { ?>
+                    <td><span class="badge-statut s-confirmee">confirmée</span></td>
+                    <td>
+                      <button class="btn-sm-custom btn-cancel"><i class="bi bi-x"></i> Annuler</button>
+                    </td>
+                  <?php } elseif($res['statut'] === 'annulee') { ?>
+                    <td><span class="badge-statut s-annulee">annulée</span></td>
+                    <td>
+                      <button class="btn-sm-custom btn-cancel disabled" disabled><i class="bi bi-x"></i> Annuler</button>
+                    </td>
+                  <?php } ?>
+                </tr>
+              <?php endforeach; ?>
             </tbody>
           </table>
         </div>
@@ -115,4 +122,4 @@
     </div>
   </div>
 </section>
-<?=this->endSection() ?>
+<?= $this->endSection() ?>

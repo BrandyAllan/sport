@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\CreneauModel;
 
-class Dashbobard extends BaseController 
+class Dashboard extends BaseController 
 {
     public function dashboard_client()
     {

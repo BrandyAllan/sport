@@ -8,7 +8,7 @@
     <?php if(session()->get('logged_in')): ?>
 
       <div class="nav-links">
-        <a href="#page-dashboard-client">Mon espace</a>
+        <a href="/dashboard">Mon espace</a>
         <a href="/logout">Déconnexion</a>
       </div>
 
