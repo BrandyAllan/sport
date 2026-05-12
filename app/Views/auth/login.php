@@ -19,11 +19,11 @@
       <form action="/login" method="post">
         <div class="form-group mb-3">
           <label class="form-label">Adresse email</label>
-          <input type="email" class="form-control" placeholder="votre@email.com" />
+          <input type="email" class="form-control" name="email" placeholder="votre@email.com" />
         </div>
         <div class="form-group mb-4">
           <label class="form-label">Mot de passe</label>
-          <input type="password" class="form-control" placeholder="••••••••" />
+          <input type="password" class="form-control" name="password" placeholder="••••••••" />
         </div>
         <button type="submit" class="btn-primary-custom">Se connecter</button>
       </form>
