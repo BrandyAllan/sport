@@ -1,6 +1,6 @@
-<?php
-include 'layout/header.php';
-?>
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
+
     <section id="page-creneaux" style="padding-top:1rem;">
 
   <nav class="nav-public">
@@ -105,6 +105,4 @@ include 'layout/header.php';
 
   <div class="footer-public">FitSpace &copy; 2025 — Projet CodeIgniter 4 · Tous droits <span>réservés</span></div>
 </section>
-<?php
-include 'layout/footer.php';
-?>
+<?=this->endSection() ?>
