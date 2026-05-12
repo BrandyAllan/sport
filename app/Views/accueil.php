@@ -1,6 +1,5 @@
-<?php
-include 'layout/header.php';
-?>
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
 
     <section id="page-accueil">
 
@@ -36,6 +35,4 @@ include 'layout/header.php';
 
 </section>
 
-<?php
-include 'layout/footer.php';
-?>
+<?= $this->endSection() ?>

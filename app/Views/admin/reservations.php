@@ -1,6 +1,6 @@
-<?php
-include 'layout/header.php';
-?>
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
+
     <section id="page-admin-reservations">
   <div class="app-wrapper">
     <aside class="sidebar">
@@ -88,6 +88,4 @@ include 'layout/header.php';
     </div>
   </div>
 </section>
-<?php
-include 'layout/footer.php';
-?>
+<?= $this->endSection() ?>

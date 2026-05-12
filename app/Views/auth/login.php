@@ -1,6 +1,6 @@
-<?php
-include 'layout/header.php';
-?>
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
+
     <section id="page-login" style="background:var(--surface);">
   <nav class="nav-public">
     <a href="#" class="brand">Fit<span>Space</span></a>
@@ -33,6 +33,5 @@ include 'layout/header.php';
     </div>
   </div>
 </section>
-<?php
-include 'layout/footer.php';
-?>
+
+<?= $this->endSection() ?>
