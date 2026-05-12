@@ -12,6 +12,13 @@
 
       <form action="/register" method="post">
         <div class="form-grid-2 mb-3">
+          <?php if(session()->getFlashdata('error')): ?>
+          <div class="flash-message flash-error">
+              <i class="bi bi-exclamation-circle-fill"></i>
+              <?= session()->getFlashdata('error') ?>
+          </div>
+          <?php endif; ?>
+          
           <div class="form-group">
             <label class="form-label">Nom</label>
             <input type="text" class="form-control" name="nom" placeholder="Dupont" />
@@ -21,7 +28,9 @@
           <label class="form-label">Adresse email</label>
           <input type="email" class="form-control" name="email" placeholder="jean.dupont@email.com" />
           <!-- Erreur de validation CI4 -->
-          <small style="color:var(--accent);font-size:0.78rem;margin-top:3px;">Cet email est déjà utilisé.</small>
+          <?php if(session()->getFlashdata('error_mail')): ?>
+            <small style="color:var(--accent);font-size:0.78rem;margin-top:3px;"><?= session()->getFlashdata('error_mail') ?></small>
+          <?php endif; ?>
         </div>
         <div class="form-group mb-3">
             <label class="form-label">Mot de passe</label>
@@ -31,6 +40,9 @@
                   <i class="bi bi-eye" id="toggleIcon"></i>
                 </button>
             </div>
+            <?php if(session()->getFlashdata('error_password')): ?>
+              <small style="color:var(--accent);font-size:0.78rem;margin-top:3px;"><?= session()->getFlashdata('error_password') ?></small>
+            <?php endif; ?>
         </div>
 
         <button type="submit" class="btn-primary-custom">Créer mon compte</button>
@@ -41,8 +53,6 @@
     </div>
   </div>
 </section>
-<?= $this->endSection() ?>
-
 
 <script>
   const passwordInput = document.getElementById('password');
@@ -56,5 +66,7 @@
     // Basculer l'icône Bootstrap (oeil ouvert / oeil barré)
     toggleIcon.classList.toggle('bi-eye');
     toggleIcon.classList.toggle('bi-eye-slash');
-});
+  });
 </script>
+
+  <?= $this->endSection() ?>
