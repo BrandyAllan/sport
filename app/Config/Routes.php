@@ -32,5 +32,6 @@ $routes->get('/reservation', 'Reservation::reservation');
 
 $routes->get('/liste-client', 'Dashboard::clients');
 
+
 $routes->get('/profil', 'Profil::index');
 $routes->post('/profil/update', 'Profil::update');
