@@ -4,6 +4,8 @@
     <section id="page-dashboard-client">
   <div class="app-wrapper">
 
+  
+
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-logo">Fit<span>Space</span></div>
@@ -18,7 +20,7 @@
             <span class="sidebar-badge urgent">2</span>
           </a>
         </li>
-        <li><a href="#page-profil"><i class="bi bi-person-fill"></i> Mon profil</a></li>
+        <li><a href="/profil"><i class="bi bi-person-fill"></i> Mon profil</a></li>
       </ul>
 
       <div class="sidebar-footer">

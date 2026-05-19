@@ -4,7 +4,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-  /* Petite structure flexbox pour afficher les deux graphiques côte à côte proprement */
   .charts-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -174,7 +173,6 @@
 </section>
 
 <script>
-    // 1. Évolution de l'occupation par semaine (Line Chart)
     const statsSemaines = <?= json_encode($statsSemaines) ?>;
     const labelsSemaines = statsSemaines.map(item => 'Semaine ' + item.semaine);
     const dataSemaines = statsSemaines.map(item => item.total);
@@ -200,14 +198,13 @@
                 y: { 
                     beginAtZero: true,
                     ticks: {
-                        stepSize: 1 // Force l'affichage des entiers uniquement (1, 2, 3...)
+                        stepSize: 1 
                     }
                 }
             }
         }
     });
 
-    // 2. Top ressources réservées (Horizontal Bar Chart)
     const statsRessources = <?= json_encode($statsRessources) ?>;
     const labelsRessources = statsRessources.map(item => item.ressource_nom);
     const dataRessources = statsRessources.map(item => item.total);
@@ -231,13 +228,13 @@
             }]
         },
         options: {
-            indexAxis: 'y', // Mode barres horizontales
+            indexAxis: 'y', 
             responsive: true,
             scales: {
                 x: { 
                     beginAtZero: true,
                     ticks: {
-                        stepSize: 1 // Force l'affichage des entiers uniquement (1, 2, 3...)
+                        stepSize: 1 
                     }
                 }
             }

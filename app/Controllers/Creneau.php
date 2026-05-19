@@ -47,6 +47,8 @@ class Creneau extends BaseController
 
         $db = \Config\Database::connect();
 
+        $name = session()->get('user_name');
+
         $ressources = $db->table('ressources')
             ->orderBy('nom', 'ASC')
             ->get()
@@ -72,6 +74,7 @@ class Creneau extends BaseController
         return view('admin/creneaux', [
             'ressources' => $ressources,
             'creneaux'   => $creneaux,
+            'name' => $name,
         ]);
     }
 

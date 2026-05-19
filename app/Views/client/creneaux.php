@@ -1,6 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
+
     <section id="page-creneaux" style="padding-top:1rem;">
 
   <nav class="nav-public">
@@ -66,7 +67,9 @@
             <div class="meta-row"><i class="bi bi-geo-alt"></i> <?= $creneau['description'] ?></div>
           </div>
           <div>
-            <div class="places-bar"><div class="places-fill" style="width:<?= ($creneau['places_dispo'] / $creneau['capacite']) * 100 ?>%"></div></div>
+            <div class="places-bar">
+              <div class="places-fill" style="width: <?= (($creneau['capacite'] - $creneau['places_dispo']) / $creneau['capacite']) * 100 ?>%"></div>
+            </div>
             <div class="places-label"><?= $creneau['places_dispo'] > 0 ? $creneau['places_dispo'] . ' places restantes sur ' . $creneau['capacite'] : 'Complet — 0 place restante' ?></div>
           </div>
           <?php if($creneau['places_dispo'] > 0): ?>
