@@ -22,6 +22,7 @@ class Profil extends BaseController
         return view('auth/profil', $data); // Ajuste le chemin de ta vue si nécessaire (ex: 'client/profil')
     }
 
+    
     // Traiter la mise à jour du profil
     public function update()
     {

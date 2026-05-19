@@ -4,6 +4,7 @@
     <section id="page-dashboard-client">
   <div class="app-wrapper">
 
+  
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-logo">Fit<span>Space</span></div>

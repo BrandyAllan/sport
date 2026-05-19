@@ -1,6 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
+
 <section id="page-mes-reservations">
   <div class="app-wrapper">
     <aside class="sidebar">

@@ -1,6 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
+
 <style>
   .profile-container {
     max-width: 600px;
