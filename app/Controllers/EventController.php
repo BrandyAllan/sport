@@ -30,6 +30,7 @@ class EventController extends ResourceController
                 'title' => $event['title'],
                 'start' => $event['start_date'],
                 'end'   => $event['end_date'],
+                'allDay' => (bool)$event['all_day'],
                 'color' => '#9b59b6',
                 'extendedProps' => [
                     'type' => 'event_perso',
@@ -86,6 +87,7 @@ class EventController extends ResourceController
         $title = $this->request->getPost('title');
         $start = $this->request->getPost('start');
         $end   = $this->request->getPost('end');
+        $allDay = $this->request->getPost('allDay');
 
         if (!$title || !$start) {
             return $this->response->setJSON([
@@ -96,10 +98,11 @@ class EventController extends ResourceController
         $model = new EventModel();
 
         $model->insert([
-            'user_id'    => session()->get('user_id'),
-            'title'      => $title,
+            'user_id' => session()->get('user_id'),
+            'title' => $title,
             'start_date' => $start,
-            'end_date'   => $end ?: $start,
+            'end_date' => $end,
+            'all_day' => ($allDay === 'true') ? 1 : 0,
             'created_at' => date('Y-m-d H:i:s'),
         ]);
 

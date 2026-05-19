@@ -82,6 +82,18 @@
             class="form-control"
         >
 
+        <div class="form-check">
+            <input
+                type="checkbox"
+                id="eventAllDay"
+                class="form-check-input"
+            >
+
+            <label for="eventAllDay">
+                Toute la journée
+            </label>
+        </div>
+
         <div style="display:flex;gap:10px;margin-top:15px;">
 
             <button id="saveEventBtn" class="btn-submit">
@@ -105,19 +117,12 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     const calendarEl = document.getElementById('calendar');
-
     const modal = document.getElementById('eventModal');
-
     const titleInput = document.getElementById('eventTitle');
-
     const startInput = document.getElementById('eventStart');
-
     const endInput = document.getElementById('eventEnd');
-
     const saveBtn = document.getElementById('saveEventBtn');
-
     const closeBtn = document.getElementById('closeModalBtn');
-
     let selectedDate = null;
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -153,17 +158,35 @@ document.addEventListener('DOMContentLoaded', function () {
         const startHour = startInput.value;
 
         const endHour = endInput.value;
+        const allDayInput = document.getElementById('eventAllDay');
 
-        if (!title || !startHour || !endHour) {
-
-            alert('Veuillez remplir tous les champs');
-
+        if (!title) {
+            alert('Veuillez entrer un titre');
             return;
         }
 
-        const start = selectedDate + 'T' + startHour + ':00';
+        if (!allDayInput && (!startHour || !endHour)) {
+            alert('Veuillez remplir les heures');
+            return;
+        }
+        let start;
+        let end;
+        let allDay = false;
 
-        const end = selectedDate + 'T' + endHour + ':00';
+        if (allDayInput.checked) {
+
+            start = selectedDate;
+
+            end = selectedDate;
+
+            allDay = true;
+
+        } else {
+
+            start = selectedDate + 'T' + startHour + ':00';
+
+            end = selectedDate + 'T' + endHour + ':00';
+        }
 
 
         fetch('/events/save', {
@@ -178,7 +201,8 @@ document.addEventListener('DOMContentLoaded', function () {
             body:
                 'title=' + encodeURIComponent(title) +
                 '&start=' + encodeURIComponent(start) +
-                '&end=' + encodeURIComponent(end)
+                '&end=' + encodeURIComponent(end) +
+                '&allDay=' + encodeURIComponent(allDay)
         })
 
         .then(response => response.json())
