@@ -35,3 +35,7 @@ $routes->get('/liste-client', 'Dashboard::clients');
 
 $routes->get('/profil', 'Profil::index');
 $routes->post('/profil/update', 'Profil::update');
+
+$routes->get('/reservation', 'EventController::index');
+$routes->get('/events', 'EventController::list');
+$routes->post('/events/save', 'EventController::save');

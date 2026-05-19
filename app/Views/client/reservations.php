@@ -39,9 +39,10 @@
 
   </div>
 </section>
+
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -50,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'fr',
+        firstDay: 1,
 
         headerToolbar: {
             left: 'prev,next today',
@@ -57,15 +59,53 @@ document.addEventListener('DOMContentLoaded', function () {
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
 
-        events: [
-            <?php foreach ($reservations as $reservation): ?>
-            {
-                title: "<?= esc($reservation['ressource_nom']) ?> - <?= esc($reservation['statut']) ?>",
-                start: "<?= esc($reservation['date_debut']) ?>",
-                end: "<?= esc($reservation['date_fin']) ?>"
-            },
-            <?php endforeach; ?>
-        ]
+        // URL unique gérée par l'EventController
+        events: '/events',
+
+        // ACTION 1 : Clic sur un jour vide -> Code du Prof (Ajouter un événement texte)
+        dateClick: function(info) {
+            let title = prompt("Ajouter une note/événement perso pour ce jour :");
+            if (!title) return;
+
+            fetch('/events/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: 'title=' + encodeURIComponent(title) + '&start=' + info.dateStr + '&end=' + info.dateStr
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    calendar.refetchEvents(); // Recharge instantanément le calendrier
+                } else {
+                    alert("Erreur lors de l'enregistrement.");
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+        },
+
+        // ACTION 2 : Clic sur un bouton du calendrier -> Gestion FitSpace (S'inscrire à un cours)
+        eventClick: function(info) {
+            const typeEvent = info.event.extendedProps.type;
+            const creneauId = info.event.id;
+            const coursTitre = info.event.title;
+
+            // Si c'est une note du prof ou un cours déjà réservé, on ne fait rien pour la réservation
+            if (typeEvent === 'prof_event' || typeEvent === 'deja_reserve') {
+                alert("Vous êtes déjà lié à cet élément.");
+                return;
+            }
+
+            // Si c'est un créneau de sport libre (couleur grise)
+            if (typeEvent === 'creneau_libre') {
+                if (confirm(`Voulez-vous réserver votre place pour le cours : ${coursTitre} ?`)) {
+                    // Redirection directe vers ta méthode de réservation SQL d'origine
+                    window.location.href = '/reserver/' + creneauId;
+                }
+            }
+        }
     });
 
     calendar.render();
