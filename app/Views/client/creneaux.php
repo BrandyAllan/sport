@@ -58,7 +58,7 @@
             <div class="places-label"><?= $creneau['places_dispo'] > 0 ? $creneau['places_dispo'] . ' places restantes sur ' . $creneau['capacite'] : 'Complet — 0 place restante' ?></div>
           </div>
           <?php if($creneau['places_dispo'] > 0): ?>
-            <a href="#" class="btn-reserver">Réserver ce créneau</a>
+            <a href="/reserver/<?= $creneau['id'] ?>" class="btn-reserver">Réserver ce créneau</a>
           <?php else: ?>
             <button class="btn-reserver disabled" disabled>Complet</button>
           <?php endif; ?>
