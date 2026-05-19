@@ -7,108 +7,104 @@ use CodeIgniter\RESTful\ResourceController;
 
 class EventController extends ResourceController
 {
-    // 1. Afficher la vue des réservations
-    public function index()
-    {
-        if (!session()->get('logged_in')) {
-            return redirect()->to('/login');
-        }
-
-        return view('client/reservations', [
-            'name' => session()->get('user_name')
-        ]);
-    }
-
-    // 2. Fusionner et renvoyer toutes les données au format JSON (Modèle du prof amélioré)
     public function list()
     {
+        if (!session()->get('logged_in')) {
+            return $this->response->setJSON([]);
+        }
+
         $db = \Config\Database::connect();
         $userId = session()->get('user_id');
+
         $data = [];
 
-        // --- SOURCE A : Les événements basiques du prof (Table 'events') ---
         $eventModel = new EventModel();
-        $events = $eventModel->findAll();
+
+        $events = $eventModel
+            ->where('user_id', $userId)
+            ->findAll();
+
         foreach ($events as $event) {
             $data[] = [
-                'id'    => 'evt_' . $event['id'], // Préfixe pour éviter les conflits d'ID
-                'title' => "📝 " . $event['title'],
+                'id'    => 'event_' . $event['id'],
+                'title' => $event['title'],
                 'start' => $event['start_date'],
                 'end'   => $event['end_date'],
-                'color' => '#9b59b6', // Couleur Violette pour les événements texte du prof
-                'extendedProps' => ['type' => 'prof_event']
+                'color' => '#9b59b6',
+                'extendedProps' => [
+                    'type' => 'event_perso',
+                ],
             ];
         }
 
-        // --- SOURCE B : Tes réservations FitSpace actives ---
-        if ($userId) {
-            $mesReservations = $db->table('reservations')
-                ->where('user_id', $userId)
-                ->where('statut !=', 'annulee')
-                ->get()
-                ->getResultArray();
-                
-            $listeMesCreneauxIds = array_column($mesReservations, 'creneau_id');
+        $reservations = $db->table('reservations r')
+            ->select('
+                r.id,
+                r.statut,
+                c.date_debut,
+                c.date_fin,
+                ressources.nom AS ressource_nom,
+                ressources.type AS ressource_type
+            ')
+            ->join('creneaux c', 'c.id = r.creneau_id')
+            ->join('ressources', 'ressources.id = c.ressource_id')
+            ->where('r.user_id', $userId)
+            ->where('r.statut !=', 'annulee')
+            ->get()
+            ->getResultArray();
 
-            // Récupérer tous les créneaux futurs de la salle
-            $creneaux = $db->table('creneaux c')
-                ->select('c.id, c.date_debut, c.date_fin, c.places_dispo, c.capacite, r.nom AS ressource_nom')
-                ->join('ressources r', 'r.id = c.ressource_id')
-                ->where('c.date_debut >=', date('Y-m-d H:i:s'))
-                ->get()
-                ->getResultArray();
+        foreach ($reservations as $reservation) {
+            $color = '#2ecc71';
 
-            foreach ($creneaux as $c) {
-                // Si l'utilisateur est inscrit
-                if (in_array($c['id'], $listeMesCreneauxIds)) {
-                    $statut = 'validé';
-                    foreach ($mesReservations as $res) {
-                        if ($res['creneau_id'] == $c['id']) {
-                            $statut = $res['statut'];
-                            break;
-                        }
-                    }
-                    $data[] = [
-                        'id'    => $c['id'],
-                        'title' => "🔒 " . $c['ressource_nom'] . " (" . ucfirst($statut) . ")",
-                        'start' => $c['date_debut'],
-                        'end'   => $c['date_fin'],
-                        'color' => ($statut === 'en_attente') ? '#f39c12' : '#2ecc71', // Orange ou Vert
-                        'extendedProps' => ['type' => 'deja_reserve']
-                    ];
-                } 
-                // Si le cours est disponible à la réservation
-                elseif ($c['places_dispo'] > 0) {
-                    $data[] = [
-                        'id'    => $c['id'],
-                        'title' => "➕ " . $c['ressource_nom'] . " (" . $c['places_dispo'] . "/" . $c['capacite'] . " pl.)",
-                        'start' => $c['date_debut'],
-                        'end'   => $c['date_fin'],
-                        'color' => '#7f8c8d', // Gris cliquable pour réserver
-                        'extendedProps' => ['type' => 'creneau_libre']
-                    ];
-                }
+            if ($reservation['statut'] === 'en_attente') {
+                $color = '#f39c12';
             }
+
+            $data[] = [
+                'id'    => 'reservation_' . $reservation['id'],
+                'title' => $reservation['ressource_nom'] . ' - ' . $reservation['statut'],
+                'start' => $reservation['date_debut'],
+                'end'   => $reservation['date_fin'],
+                'color' => $color,
+                'extendedProps' => [
+                    'type' => 'reservation',
+                ],
+            ];
         }
 
         return $this->response->setJSON($data);
     }
 
-    // 3. Sauvegarde d'un événement au clic (Code inchangé du prof)
     public function save()
     {
-        $model = new EventModel();
-        
+        if (!session()->get('logged_in')) {
+            return $this->response->setJSON([
+                'status' => 'error',
+            ]);
+        }
+
         $title = $this->request->getPost('title');
         $start = $this->request->getPost('start');
         $end   = $this->request->getPost('end');
 
+        if (!$title || !$start) {
+            return $this->response->setJSON([
+                'status' => 'error',
+            ]);
+        }
+
+        $model = new EventModel();
+
         $model->insert([
+            'user_id'    => session()->get('user_id'),
             'title'      => $title,
             'start_date' => $start,
-            'end_date'   => $end
+            'end_date'   => $end ?: $start,
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
 
-        return $this->response->setJSON(['status' => 'success']);
+        return $this->response->setJSON([
+            'status' => 'success',
+        ]);
     }
 }

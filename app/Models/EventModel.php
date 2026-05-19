@@ -11,5 +11,5 @@ class EventModel extends Model
     protected $returnType       = 'array';
     protected $useAutoIncrement = true;
     
-    protected $allowedFields    = ['title', 'start_date', 'end_date'];
+    protected $allowedFields    = ['title', 'start_date', 'end_date', 'user_id'];
 }

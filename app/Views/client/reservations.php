@@ -36,22 +36,21 @@
             </div>
         </div>
     </div>
-
-  </div>
 </section>
 
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
 
-
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+
     const calendarEl = document.getElementById('calendar');
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
+
         initialView: 'dayGridMonth',
         locale: 'fr',
-        firstDay: 1,
 
         headerToolbar: {
             left: 'prev,next today',
@@ -59,13 +58,32 @@ document.addEventListener('DOMContentLoaded', function () {
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
 
-        // URL unique gérée par l'EventController
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+
         events: '/events',
 
-        // ACTION 1 : Clic sur un jour vide -> Code du Prof (Ajouter un événement texte)
+        /*
+        |--------------------------------------------------------------------------
+        | Sélection avec heure
+        |--------------------------------------------------------------------------
+        */
+
         dateClick: function(info) {
-            let title = prompt("Ajouter une note/événement perso pour ce jour :");
+            let title = prompt("Titre de l'événement :");
             if (!title) return;
+
+            let heureDebut = prompt("Heure de début ? Exemple : 14:00");
+            if (!heureDebut) return;
+
+            let heureFin = prompt("Heure de fin ? Exemple : 16:00");
+            if (!heureFin) return;
+
+            let start = info.dateStr + "T" + heureDebut + ":00";
+            let end   = info.dateStr + "T" + heureFin + ":00";
 
             fetch('/events/save', {
                 method: 'POST',
@@ -73,38 +91,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
-                body: 'title=' + encodeURIComponent(title) + '&start=' + info.dateStr + '&end=' + info.dateStr
+                body:
+                    'title=' + encodeURIComponent(title) +
+                    '&start=' + encodeURIComponent(start) +
+                    '&end=' + encodeURIComponent(end)
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    calendar.refetchEvents(); // Recharge instantanément le calendrier
+                    calendar.refetchEvents();
                 } else {
-                    alert("Erreur lors de l'enregistrement.");
+                    alert("Erreur lors de l'ajout.");
                 }
-            })
-            .catch(error => console.error('Erreur:', error));
-        },
-
-        // ACTION 2 : Clic sur un bouton du calendrier -> Gestion FitSpace (S'inscrire à un cours)
-        eventClick: function(info) {
-            const typeEvent = info.event.extendedProps.type;
-            const creneauId = info.event.id;
-            const coursTitre = info.event.title;
-
-            // Si c'est une note du prof ou un cours déjà réservé, on ne fait rien pour la réservation
-            if (typeEvent === 'prof_event' || typeEvent === 'deja_reserve') {
-                alert("Vous êtes déjà lié à cet élément.");
-                return;
-            }
-
-            // Si c'est un créneau de sport libre (couleur grise)
-            if (typeEvent === 'creneau_libre') {
-                if (confirm(`Voulez-vous réserver votre place pour le cours : ${coursTitre} ?`)) {
-                    // Redirection directe vers ta méthode de réservation SQL d'origine
-                    window.location.href = '/reserver/' + creneauId;
-                }
-            }
+            });
         }
     });
 
