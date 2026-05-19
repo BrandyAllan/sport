@@ -75,7 +75,20 @@
             <tbody>
               <?php foreach($reservationsRecentes as $res): ?>
               <tr>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;font-size:0.65rem;">JD</div><span class="td-name"><?=$res['client_nom']?></span></div></td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                  <?php 
+                    $mots = explode(' ', trim($res['client_nom'])); 
+                    $initiales = mb_substr($mots[0], 0, 1); 
+                    if (count($mots) > 1) {
+                        $initiales .= mb_substr($mots[1], 0, 1);
+                    }
+                    $initiales = mb_strtoupper($initiales); 
+                  ?>
+                    <div class="avatar" style="width:28px;height:28px;font-size:0.65rem;"><?=$initiales?></div>
+                    <span class="td-name"><?=$res['client_nom']?></span>
+                  </div>
+                </td>
                 <td class="td-muted"><?=$res['ressource_type']?></td>
                 <td class="td-muted"><?=$res['date_debut']?></td>
                 <td><span class="badge-statut s-attente">en attente</span></td>
