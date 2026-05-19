@@ -12,6 +12,8 @@ class Dashboard extends BaseController
         }
 
         $userId = session()->get('user_id');
+        $name = session()->get('user_name');
+        $role = session()->get('role');
 
         $db = \Config\Database::connect();
 
@@ -77,6 +79,9 @@ class Dashboard extends BaseController
             return redirect()->to('/creneau');
         }
 
+        $name = session()->get('user_name');
+        $role = session()->get('role');
+
         $db = \Config\Database::connect();
 
         $enAttente = $db->table('reservations')
@@ -123,6 +128,8 @@ class Dashboard extends BaseController
             'creneaux_actifs'      => $creneauxActifs,
             'clients_inscrits'     => $clientsInscrits,
             'reservationsRecentes' => $reservationsRecentes,
+            'name'           => $name,
+            'role'                => $role,
         ];
 
         return view('admin/dashboard', $data);
