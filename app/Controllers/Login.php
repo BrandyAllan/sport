@@ -50,7 +50,7 @@ class Login extends BaseController
                 'logged_in'  => true
             ]);
 
-            return redirect()->to('/admin/dashboard');
+            return redirect()->to('/dashboard');
         }
 
         session()->set([
