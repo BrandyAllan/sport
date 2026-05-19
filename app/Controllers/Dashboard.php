@@ -172,4 +172,42 @@ class Dashboard extends BaseController
             return $this->dashboard_admin();
         }
     }    
+
+    public function clients()
+    {
+        if (!session()->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/dashboard')
+                ->with(
+                    'error',
+                    'Accès refusé.'
+                );
+        }
+
+        $db = \Config\Database::connect();
+
+        $clients = $db->table('users')
+            ->select('
+                id,
+                nom,
+                email,
+                role,
+                created_at
+            ')
+            ->orderBy('created_at', 'DESC')
+            ->where('role', 'client')
+            ->get()
+            ->getResultArray();
+
+        $data = [
+            'clients' => $clients,
+            'name' => session()->get('user_name'),
+            'role' => session()->get('role'),
+        ];
+
+        return view('admin/liste-client', $data);
+    }
 }

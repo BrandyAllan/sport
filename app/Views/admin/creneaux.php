@@ -9,12 +9,20 @@
         <li><a href="/dashboard"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
         <li><a href="/reservation"><i class="bi bi-bookmark-star-fill"></i> Réservations</a></li>
         <li><a href="/creneau" class="active"><i class="bi bi-calendar-week-fill"></i> Créneaux</a></li>
-        <li><a href="#page-admin-clients"><i class="bi bi-people-fill"></i> Clients</a></li>
+        <li><a href="/liste-client"><i class="bi bi-people-fill"></i> Clients</a></li>
       </ul>
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="avatar" style="background:#0f3460;">AD</div>
-          <div class="user-info"><div class="name">Admin</div><div class="role">Administrateur</div></div>
+          <?php 
+            $mots = explode(' ', trim($name)); 
+            $initiales = mb_substr($mots[0], 0, 1); 
+            if (count($mots) > 1) {
+                $initiales .= mb_substr($mots[1], 0, 1);
+            }
+            $initiales = mb_strtoupper($initiales); 
+          ?>
+          <div class="avatar" style="background:#0f3460;"><?= $initiales ?></div>
+          <div class="user-info"><div class="name"><?= $name ?></div><div class="role">Administrateur</div></div>
         </div>
       </div>
     </aside>

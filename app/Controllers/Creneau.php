@@ -140,6 +140,7 @@ class Creneau extends BaseController
             return redirect()->to('/login');
         }
 
+        $name = session()->get('user_name');
         $db = \Config\Database::connect();
 
         $creneau = $db->table('creneaux')
@@ -160,6 +161,7 @@ class Creneau extends BaseController
         return view('admin/edit_creneau', [
             'creneau'    => $creneau,
             'ressources' => $ressources,
+            'name' => $name,
         ]);
     }
 
