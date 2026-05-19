@@ -73,7 +73,7 @@
               <tr><th>Client</th><th>Créneau</th><th>Date</th><th>Statut</th><th>Actions</th></tr>
             </thead>
             <tbody>
-              <?php foreach($reservations as $res): ?>
+              <?php foreach($reservationsRecentes as $res): ?>
               <tr>
                 <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;font-size:0.65rem;">JD</div><span class="td-name"><?=$res['client_nom']?></span></div></td>
                 <td class="td-muted"><?=$res['ressource_type']?></td>
