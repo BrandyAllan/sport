@@ -93,8 +93,8 @@
             <tbody>
               <?php foreach($reservations as $res): ?>
                 <tr>
-                  <td class="td-name">Yoga Détente</td>
-                  <td class="td-muted">Lun 16 juin 2025</td>
+                  <td class="td-name"><?=$res['ressource_type']?></td>
+                  <td class="td-muted"><?= $res['date_debut'] ?></td>
                   <td class="td-muted">08h00 – 09h30</td>
                   <?php if($res['statut'] === 'en_attente') { ?>
                     <td><span class="badge-statut s-attente">en attente</span></td>
