@@ -22,3 +22,4 @@ $routes->get('/reserver/(:num)', 'Reservation::reserver/$1');
 
 $routes->get('/confirmer/(:num)', 'Reservation::confirmer/$1');
 $routes->get('/refuser/(:num)', 'Reservation::refuser/$1');
+$routes->get('/annuler/(:num)', 'Reservation::annuler/$1');

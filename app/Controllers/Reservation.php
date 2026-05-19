@@ -166,4 +166,57 @@ class Reservation extends BaseController
         return redirect()->to('/dashboard')
             ->with('success', 'Réservation refusée avec succès.');
     }
+
+    public function annuler($id)
+    {
+        if (!session()->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/dashboard')
+                ->with('error', 'Accès refusé.');
+        }
+
+        $db = \Config\Database::connect();
+
+        $reservation = $db->table('reservations')
+            ->where('id', $id)
+            ->get()
+            ->getRowArray();
+
+        if (!$reservation) {
+            return redirect()->to('/admin/dashboard')
+                ->with('error', 'Réservation introuvable.');
+        }
+
+        if ($reservation['statut'] === 'annulee') {
+            return redirect()->to('/admin/dashboard')
+                ->with('error', 'Cette réservation est déjà annulée.');
+        }
+
+        $db->table('reservations')
+            ->where('id', $id)
+            ->update([
+                'statut' => 'annulee'
+            ]);
+
+        if ($reservation['statut'] !== 'annulee') {
+            $creneau = $db->table('creneaux')
+                ->where('id', $reservation['creneau_id'])
+                ->get()
+                ->getRowArray();
+
+            if ($creneau) {
+                $db->table('creneaux')
+                    ->where('id', $reservation['creneau_id'])
+                    ->update([
+                        'places_dispo' => $creneau['places_dispo'] + 1
+                    ]);
+            }
+        }
+
+        return redirect()->to('/admin/dashboard')
+            ->with('success', 'Réservation annulée avec succès.');
+    }
 }
