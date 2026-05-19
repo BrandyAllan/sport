@@ -133,4 +133,69 @@ class Creneau extends BaseController
 
         return redirect()->to('/admin/creneaux')->with('success', 'Créneau supprimé.');
     }
+
+    public function edit_creneau($id)
+    {
+        if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
+            return redirect()->to('/login');
+        }
+
+        $db = \Config\Database::connect();
+
+        $creneau = $db->table('creneaux')
+            ->where('id', $id)
+            ->get()
+            ->getRowArray();
+
+        $ressources = $db->table('ressources')
+            ->orderBy('nom', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        if (!$creneau) {
+            return redirect()->to('/admin/creneaux')
+                ->with('error', 'Créneau introuvable.');
+        }
+
+        return view('admin/edit_creneau', [
+            'creneau'    => $creneau,
+            'ressources' => $ressources,
+        ]);
+    }
+
+    public function update_creneau($id)
+    {
+        if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
+            return redirect()->to('/login');
+        }
+
+        $ressourceId = $this->request->getPost('ressource_id');
+        $placesDispo = $this->request->getPost('places_dispo');
+        $dateDebut   = $this->request->getPost('date_debut');
+        $dateFin     = $this->request->getPost('date_fin');
+        $actif       = $this->request->getPost('actif') ? 1 : 0;
+
+        if (!$ressourceId || !$placesDispo || !$dateDebut || !$dateFin) {
+            return redirect()->back()->with('error', 'Veuillez remplir tous les champs.');
+        }
+
+        if (strtotime($dateFin) <= strtotime($dateDebut)) {
+            return redirect()->back()->with('error', 'La date de fin doit être après la date de début.');
+        }
+
+        $db = \Config\Database::connect();
+
+        $db->table('creneaux')
+            ->where('id', $id)
+            ->update([
+                'ressource_id' => $ressourceId,
+                'places_dispo' => $placesDispo,
+                'date_debut'   => str_replace('T', ' ', $dateDebut) . ':00',
+                'date_fin'     => str_replace('T', ' ', $dateFin) . ':00',
+                'actif'        => $actif,
+            ]);
+
+        return redirect()->to('/admin/creneaux')
+            ->with('success', 'Créneau modifié avec succès.');
+    }
 }

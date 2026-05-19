@@ -35,7 +35,7 @@
         <!-- Formulaire ajout créneau -->
         <div class="form-section">
           <h3><i class="bi bi-plus-circle" style="color:var(--accent);margin-right:6px;"></i>Ajouter un créneau</h3>
-          <form action="/admin/creneaux/ajouter" method="post">
+          <form action="/ajouter-creneau" method="post">
               <div class="form-grid-2" style="margin-bottom:1rem;">
                   <div class="form-group">
                       <label class="form-label">Ressource</label>
@@ -84,45 +84,47 @@
               <tr><th>Ressource</th><th>Date début</th><th>Date fin</th><th>Places dispo</th><th>Actif</th><th>Actions</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="td-name">Yoga Détente <span class="creneau-type type-cours" style="font-size:0.65rem;margin-left:5px;">Cours</span></td>
-                <td class="td-muted">16 juin · 08h00</td>
-                <td class="td-muted">16 juin · 09h30</td>
-                <td>6 / 10</td>
-                <td><span class="badge-statut s-confirmee" style="font-size:0.68rem;">Oui</span></td>
-                <td>
-                  <div class="action-btns">
-                    <button class="btn-sm-custom btn-edit"><i class="bi bi-pencil"></i> Éditer</button>
-                    <button class="btn-sm-custom btn-del"><i class="bi bi-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="td-name">CrossFit Intensif <span class="creneau-type type-cours" style="font-size:0.65rem;margin-left:5px;">Cours</span></td>
-                <td class="td-muted">16 juin · 18h00</td>
-                <td class="td-muted">16 juin · 19h30</td>
-                <td>0 / 15</td>
-                <td><span class="badge-statut s-confirmee" style="font-size:0.68rem;">Oui</span></td>
-                <td>
-                  <div class="action-btns">
-                    <button class="btn-sm-custom btn-edit"><i class="bi bi-pencil"></i> Éditer</button>
-                    <button class="btn-sm-custom btn-del"><i class="bi bi-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="td-name">Terrain squash A <span class="creneau-type type-terrain" style="font-size:0.65rem;margin-left:5px;">Terrain</span></td>
-                <td class="td-muted">18 juin · 14h00</td>
-                <td class="td-muted">18 juin · 15h00</td>
-                <td>1 / 2</td>
-                <td><span class="badge-statut s-confirmee" style="font-size:0.68rem;">Oui</span></td>
-                <td>
-                  <div class="action-btns">
-                    <button class="btn-sm-custom btn-edit"><i class="bi bi-pencil"></i> Éditer</button>
-                    <button class="btn-sm-custom btn-del"><i class="bi bi-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
+            <?php foreach($creneaux as $creneau): ?>
+                <tr>
+                    <td class="td-name">
+                        <?= esc($creneau['ressource_nom']) ?>
+                        <span class="creneau-type type-<?= esc($creneau['ressource_type']) ?>" style="font-size:0.65rem;margin-left:5px;">
+                            <?= ucfirst(esc($creneau['ressource_type'])) ?>
+                        </span>
+                    </td>
+
+                    <td class="td-muted">
+                        <?= date('d M · H\hi', strtotime($creneau['date_debut'])) ?>
+                    </td>
+
+                    <td class="td-muted">
+                        <?= date('d M · H\hi', strtotime($creneau['date_fin'])) ?>
+                    </td>
+
+                    <td>
+                        <?= esc($creneau['places_dispo']) ?> / <?= esc($creneau['capacite']) ?>
+                    </td>
+
+                    <td>
+                        <?php if($creneau['actif'] == 1): ?>
+                            <span class="badge-statut s-confirmee" style="font-size:0.68rem;">Oui</span>
+                        <?php else: ?>
+                            <span class="badge-statut s-annulee" style="font-size:0.68rem;">Non</span>
+                        <?php endif; ?>
+                    </td>
+
+                    <td>
+                        <div class="action-btns">
+                          <a href="/editer-creneau/<?= $creneau['id'] ?>" class="btn-sm-custom btn-edit">
+                              <i class="bi bi-pencil"></i> Éditer
+                          </a>
+                          <a href="/admin/creneaux/supprimer/<?= $creneau['id'] ?>" class="btn-sm-custom btn-del">
+                              <i class="bi bi-trash"></i>
+                          </a>
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
             </tbody>
           </table>
         </div>
