@@ -40,23 +40,23 @@
         <div class="metrics-row">
           <div class="metric-card">
             <div class="metric-icon yellow"><i class="bi bi-hourglass-split"></i></div>
-            <div class="metric-value">4</div>
+            <div class="metric-value"><?= $en_attente ?></div>
             <div class="metric-label">En attente</div>
             <div class="metric-trend up"><i class="bi bi-arrow-up-short"></i> +2 aujourd'hui</div>
           </div>
           <div class="metric-card">
             <div class="metric-icon green"><i class="bi bi-check-circle-fill"></i></div>
-            <div class="metric-value">18</div>
+            <div class="metric-value"><?= $confirmees_ce_mois ?></div>
             <div class="metric-label">Confirmées ce mois</div>
           </div>
           <div class="metric-card">
             <div class="metric-icon blue"><i class="bi bi-calendar-check"></i></div>
-            <div class="metric-value">6</div>
+            <div class="metric-value"><?= $creneaux_actifs ?></div>
             <div class="metric-label">Créneaux actifs</div>
           </div>
           <div class="metric-card">
             <div class="metric-icon red"><i class="bi bi-people-fill"></i></div>
-            <div class="metric-value">31</div>
+            <div class="metric-value"><?= $clients_inscrits ?></div>
             <div class="metric-label">Clients inscrits</div>
             <div class="metric-trend up"><i class="bi bi-arrow-up-short"></i> +3 cette semaine</div>
           </div>
@@ -73,10 +73,11 @@
               <tr><th>Client</th><th>Créneau</th><th>Date</th><th>Statut</th><th>Actions</th></tr>
             </thead>
             <tbody>
+              <?php foreach($reservationsRecentes as $res): ?>
               <tr>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;font-size:0.65rem;">JD</div><span class="td-name">Jean Dupont</span></div></td>
-                <td class="td-muted">Yoga Détente</td>
-                <td class="td-muted">16 juin · 08h00</td>
+                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;font-size:0.65rem;">JD</div><span class="td-name"><?=$res['client_nom']?></span></div></td>
+                <td class="td-muted"><?=$res['ressource_type']?></td>
+                <td class="td-muted"><?=$res['date_debut']?></td>
                 <td><span class="badge-statut s-attente">en attente</span></td>
                 <td>
                   <div class="action-btns">
@@ -85,25 +86,7 @@
                   </div>
                 </td>
               </tr>
-              <tr>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;font-size:0.65rem;background:#0f3460;">MA</div><span class="td-name">Marie Andria</span></div></td>
-                <td class="td-muted">CrossFit Intensif</td>
-                <td class="td-muted">16 juin · 18h00</td>
-                <td><span class="badge-statut s-attente">en attente</span></td>
-                <td>
-                  <div class="action-btns">
-                    <button class="btn-sm-custom btn-confirm"><i class="bi bi-check"></i> Confirmer</button>
-                    <button class="btn-sm-custom btn-refuse"><i class="bi bi-x"></i> Refuser</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;font-size:0.65rem;background:#1a6b39;">SR</div><span class="td-name">Soa Rabe</span></div></td>
-                <td class="td-muted">Terrain squash</td>
-                <td class="td-muted">18 juin · 14h00</td>
-                <td><span class="badge-statut s-confirmee">confirmée</span></td>
-                <td><span style="font-size:0.75rem;color:var(--muted);">—</span></td>
-              </tr>
+              <?php endforeach; ?>
             </tbody>
           </table>
         </div>
