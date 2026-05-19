@@ -17,3 +17,5 @@ $routes->post('/register', 'Register::doRegister');
 $routes->get('/logout', 'Login::logout');
 
 $routes->get('/dashboard', 'Dashboard::dashbobard');
+
+$routes->get('/reserver/(:num)', 'Reservation::reserver/$1');
