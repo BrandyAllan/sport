@@ -29,3 +29,6 @@ $routes->get('/refuser/(:num)', 'Reservation::refuser/$1');
 $routes->get('/annuler/(:num)', 'Reservation::annuler/$1');
 
 $routes->get('/reservation', 'Reservation::reservation');
+
+$routes->get('/profil', 'Profil::index');
+$routes->post('/profil/update', 'Profil::update');

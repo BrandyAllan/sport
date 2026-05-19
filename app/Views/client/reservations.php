@@ -9,7 +9,7 @@
         <li><a href="/dashboard"><i class="bi bi-grid-1x2-fill"></i> Tableau de bord</a></li>
         <li><a href="/creneau"><i class="bi bi-calendar3"></i> Voir les créneaux</a></li>
         <li><a href="/reservation" class="active"><i class="bi bi-bookmark-check-fill"></i> Mes réservations</a></li>
-        <li><a href="#page-profil"><i class="bi bi-person-fill"></i> Mon profil</a></li>
+        <li><a href="/profil"><i class="bi bi-person-fill"></i> Mon profil</a></li>
       </ul>
       <div class="sidebar-footer">
         <div class="sidebar-user">
