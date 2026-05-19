@@ -163,12 +163,12 @@ class Creneau extends BaseController
         ]);
     }
 
-    public function update_creneau($id)
+    public function update_creneau()
     {
         if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
             return redirect()->to('/login');
         }
-
+        $creneauId = $this->request->getPost('id_creneau');
         $ressourceId = $this->request->getPost('ressource_id');
         $placesDispo = $this->request->getPost('places_dispo');
         $dateDebut   = $this->request->getPost('date_debut');
@@ -176,17 +176,17 @@ class Creneau extends BaseController
         $actif       = $this->request->getPost('actif') ? 1 : 0;
 
         if (!$ressourceId || !$placesDispo || !$dateDebut || !$dateFin) {
-            return redirect()->back()->with('error', 'Veuillez remplir tous les champs.');
+            return redirect()->to('/editer-creneau/' . $creneauId)->with('error', 'Veuillez remplir tous les champs.');
         }
 
         if (strtotime($dateFin) <= strtotime($dateDebut)) {
-            return redirect()->back()->with('error', 'La date de fin doit être après la date de début.');
+            return redirect()->to('/editer-creneau/' . $creneauId)->with('error', 'La date de fin doit être après la date de début.');
         }
 
         $db = \Config\Database::connect();
 
         $db->table('creneaux')
-            ->where('id', $id)
+            ->where('id', $creneauId)
             ->update([
                 'ressource_id' => $ressourceId,
                 'places_dispo' => $placesDispo,
@@ -195,7 +195,7 @@ class Creneau extends BaseController
                 'actif'        => $actif,
             ]);
 
-        return redirect()->to('/admin/creneaux')
+        return redirect()->to('/creneau')
             ->with('success', 'Créneau modifié avec succès.');
     }
 }

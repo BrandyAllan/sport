@@ -36,7 +36,7 @@
             <div class="name"><?= $name ?></div>
             <div class="role"><?= $role ?></div>
           </div>
-          <a href="#page-login" style="margin-left:auto;color:rgba(255,255,255,0.3);font-size:1.1rem;" title="Déconnexion"><i class="bi bi-box-arrow-right"></i></a>
+          <a href="/logout" style="margin-left:auto;color:rgba(255,255,255,0.3);font-size:1.1rem;" title="Déconnexion"><i class="bi bi-box-arrow-right"></i></a>
         </div>
       </div>
     </aside>
