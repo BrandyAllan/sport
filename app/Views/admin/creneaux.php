@@ -26,12 +26,20 @@
 
       <div class="page-content">
 
-        <!-- Flash info -->
-        <div class="flash-message flash-info">
-          <i class="bi bi-info-circle-fill"></i>
-          Créneau mis à jour avec succès.
+              <!-- Flash success -->
+        <?php if(session()->getFlashdata('succes')): ?>
+        <div class="flash-message flash-success">
+          <i class="bi bi-check-circle-fill"></i>
+          <?= session()->getFlashdata('succes') ?>
         </div>
-
+        <?php endif; ?>
+        <?php if(session()->getFlashdata('error')): ?>
+          <div class="flash-message flash-error">
+              <i class="bi bi-exclamation-circle-fill"></i>
+              <?= session()->getFlashdata('error') ?>
+          </div>
+        <?php endif; ?>
+        
         <!-- Formulaire ajout créneau -->
         <div class="form-section">
           <h3><i class="bi bi-plus-circle" style="color:var(--accent);margin-right:6px;"></i>Ajouter un créneau</h3>
