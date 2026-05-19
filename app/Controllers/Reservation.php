@@ -77,4 +77,93 @@ class Reservation extends BaseController
             'Réservation effectuée avec succès.'
         );
     }
+
+    public function confirmer($id)
+    {
+        if (!session()->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/dashboard')
+                ->with('error', 'Accès refusé.');
+        }
+
+        $db = \Config\Database::connect();
+
+        $reservation = $db->table('reservations')
+            ->where('id', $id)
+            ->get()
+            ->getRowArray();
+
+        if (!$reservation) {
+            return redirect()->to('/dashboard')
+                ->with('error', 'Réservation introuvable.');
+        }
+
+        if ($reservation['statut'] !== 'en_attente') {
+            return redirect()->to('/dashboard')
+                ->with('error', 'Cette réservation a déjà été traitée.');
+        }
+
+        $db->table('reservations')
+            ->where('id', $id)
+            ->update([
+                'statut' => 'confirmee'
+            ]);
+
+        return redirect()->to('/dashboard')
+            ->with('success', 'Réservation confirmée avec succès.');
+    }
+
+    public function refuser($id)
+    {
+        if (!session()->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/dashboard')
+                ->with('error', 'Accès refusé.');
+        }
+
+        $db = \Config\Database::connect();
+
+        $reservation = $db->table('reservations')
+            ->where('id', $id)
+            ->get()
+            ->getRowArray();
+
+        if (!$reservation) {
+            return redirect()->to('/dashboard')
+                ->with('error', 'Réservation introuvable.');
+        }
+
+        if ($reservation['statut'] !== 'en_attente') {
+            return redirect()->to('/dashboard')
+                ->with('error', 'Cette réservation a déjà été traitée.');
+        }
+
+        $db->table('reservations')
+            ->where('id', $id)
+            ->update([
+                'statut' => 'annulee'
+            ]);
+
+        $creneau = $db->table('creneaux')
+            ->where('id', $reservation['creneau_id'])
+            ->get()
+            ->getRowArray();
+
+        if ($creneau) {
+            $db->table('creneaux')
+                ->where('id', $reservation['creneau_id'])
+                ->update([
+                    'places_dispo' => $creneau['places_dispo'] + 1
+                ]);
+        }
+
+        return redirect()->to('/dashboard')
+            ->with('success', 'Réservation refusée avec succès.');
+    }
 }

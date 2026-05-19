@@ -64,6 +64,8 @@ class Dashboard extends BaseController
             'annulees'     => $annulees,
             'a_venir'      => $aVenir,
             'reservations' => $reservations,
+            'name'        => $name,
+            'role'        => $role,
         ];
 
         return view('client/dashboard', $data);
@@ -112,7 +114,7 @@ class Dashboard extends BaseController
                 c.date_debut,
                 c.date_fin,
                 ressources.nom AS ressource_nom,
-                ressources.type AS ressource_type
+                ressources.type AS ressource_type,
             ')
             ->join('users u', 'u.id = r.user_id')
             ->join('creneaux c', 'c.id = r.creneau_id')
