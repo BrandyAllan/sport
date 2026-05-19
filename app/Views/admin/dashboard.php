@@ -8,20 +8,28 @@
       <div class="sidebar-logo">Fit<span>Space</span> <span style="font-size:0.6rem;background:var(--accent);color:#fff;padding:2px 6px;border-radius:4px;vertical-align:middle;">Admin</span></div>
       <div class="sidebar-section">Gestion</div>
       <ul class="sidebar-nav">
-        <li><a href="#page-dashboard-admin" class="active"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
+        <li><a href="/dashboard" class="active"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
         <li>
-          <a href="#page-admin-reservations">
+          <a href="/reservation">
             <i class="bi bi-bookmark-star-fill"></i> Réservations
             <span class="sidebar-badge urgent">4</span>
           </a>
         </li>
-        <li><a href="#page-admin-creneaux"><i class="bi bi-calendar-week-fill"></i> Créneaux</a></li>
+        <li><a href="/creneau"><i class="bi bi-calendar-week-fill"></i> Créneaux</a></li>
         <li><a href="#page-admin-clients"><i class="bi bi-people-fill"></i> Clients</a></li>
       </ul>
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="avatar" style="background:#0f3460;">AD</div>
-          <div class="user-info"><div class="name">Admin</div><div class="role">Administrateur</div></div>
+          <?php 
+            $mots = explode(' ', trim($name)); 
+            $initiales = mb_substr($mots[0], 0, 1); 
+            if (count($mots) > 1) {
+                $initiales .= mb_substr($mots[1], 0, 1);
+            }
+            $initiales = mb_strtoupper($initiales); 
+          ?>
+          <div class="avatar" style="background:#0f3460;"><?= $initiales ?></div>
+          <div class="user-info"><div class="name"><?= $name ?></div><div class="role"><?= $role ?></div></div>
           <a href="#page-login" style="margin-left:auto;color:rgba(255,255,255,0.3);font-size:1.1rem;"><i class="bi bi-box-arrow-right"></i></a>
         </div>
       </div>
@@ -37,6 +45,20 @@
 
       <div class="page-content">
 
+              <!-- Flash success -->
+        <?php if(session()->getFlashdata('succes')): ?>
+        <div class="flash-message flash-success">
+          <i class="bi bi-check-circle-fill"></i>
+          <?= session()->getFlashdata('succes') ?>
+        </div>
+        <?php endif; ?>
+        <?php if(session()->getFlashdata('error')): ?>
+          <div class="flash-message flash-error">
+              <i class="bi bi-exclamation-circle-fill"></i>
+              <?= session()->getFlashdata('error') ?>
+          </div>
+        <?php endif; ?>
+        
         <div class="metrics-row">
           <div class="metric-card">
             <div class="metric-icon yellow"><i class="bi bi-hourglass-split"></i></div>
@@ -91,18 +113,28 @@
                 </td>
                 <td class="td-muted"><?=$res['ressource_type']?></td>
                 <td class="td-muted"><?=$res['date_debut']?></td>
-                <td><span class="badge-statut s-attente">en attente</span></td>
-                <td>
-                  <div class="action-btns">
-                    <button class="btn-sm-custom btn-confirm"><i class="bi bi-check"></i> Confirmer</button>
-                    <button class="btn-sm-custom btn-refuse"><i class="bi bi-x"></i> Refuser</button>
-                  </div>
-                </td>
+                <?php if($res['statut'] === 'en_attente') { ?>
+                  <td><span class="badge-statut s-attente">en attente</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <a href="/confirmer/<?=$res['id']?>" class="btn-sm-custom btn-confirm"><i class="bi bi-check"></i> Confirmer</a>
+                      <a href="/refuser/<?=$res['id']?>" class="btn-sm-custom btn-refuse"><i class="bi bi-x"></i> Refuser</a>
+                    </div>
+                  </td>
+                <?php } elseif($res['statut'] === 'confirmee') { ?>
+                  <td><span class="badge-statut s-confirmee">confirmée</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <a href="/annuler/<?=$res['id']?>" class="btn-sm-custom btn-cancel"><i class="bi bi-x"></i> Annuler</a>
+                    </div>
+                  </td>
+                <?php } ?>
               </tr>
               <?php endforeach; ?>
             </tbody>
           </table>
         </div>
+      </div>
 
       </div>
     </div>

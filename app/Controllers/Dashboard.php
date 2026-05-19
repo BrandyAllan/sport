@@ -119,6 +119,7 @@ class Dashboard extends BaseController
             ->join('users u', 'u.id = r.user_id')
             ->join('creneaux c', 'c.id = r.creneau_id')
             ->join('ressources', 'ressources.id = c.ressource_id')
+            ->where('r.statut !=', 'annulee')
             ->orderBy('r.created_at', 'DESC')
             ->limit(5)
             ->get()
@@ -148,34 +149,5 @@ class Dashboard extends BaseController
         } else {
             return $this->dashboard_admin();
         }
-    }
-
-    public function creneau()
-    {
-        $creneauModel = new CreneauModel();
-
-        $creneaux = $creneauModel
-            ->select('
-                creneaux.id,
-                creneaux.ressource_id,
-                creneaux.date_debut,
-                creneaux.date_fin,
-                creneaux.places_dispo,
-                creneaux.actif,
-                ressources.nom AS ressource_nom,
-                ressources.type AS ressource_type,
-                ressources.capacite,
-                ressources.description
-            ')
-            ->join('ressources', 'ressources.id = creneaux.ressource_id')
-            ->orderBy('creneaux.date_debut', 'ASC')
-            ->findAll();
-
-        $data = [
-            'creneaux' => $creneaux,
-            'total'    => count($creneaux),
-        ];
-
-        return view('client/creneaux', $data);
-    }
+    }    
 }

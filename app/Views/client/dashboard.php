@@ -23,10 +23,18 @@
 
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="avatar">JD</div>
+            <?php 
+            $mots = explode(' ', trim($name)); 
+            $initiales = mb_substr($mots[0], 0, 1); 
+            if (count($mots) > 1) {
+                $initiales .= mb_substr($mots[1], 0, 1);
+            }
+            $initiales = mb_strtoupper($initiales); 
+          ?>
+          <div class="avatar"><?= $initiales ?></div>
           <div class="user-info">
-            <div class="name">Jean Dupont</div>
-            <div class="role">Client</div>
+            <div class="name"><?= $name ?></div>
+            <div class="role"><?= $role ?></div>
           </div>
           <a href="#page-login" style="margin-left:auto;color:rgba(255,255,255,0.3);font-size:1.1rem;" title="Déconnexion"><i class="bi bi-box-arrow-right"></i></a>
         </div>
@@ -45,10 +53,18 @@
       <div class="page-content">
 
         <!-- Flash success -->
+        <?php if(session()->getFlashdata('succes')): ?>
         <div class="flash-message flash-success">
           <i class="bi bi-check-circle-fill"></i>
-          Votre réservation a bien été enregistrée. Elle est en attente de confirmation.
+          <?= session()->getFlashdata('succes') ?>
         </div>
+        <?php endif; ?>
+        <?php if(session()->getFlashdata('error')): ?>
+          <div class="flash-message flash-error">
+              <i class="bi bi-exclamation-circle-fill"></i>
+              <?= session()->getFlashdata('error') ?>
+          </div>
+        <?php endif; ?>
 
         <!-- Métriques -->
         <div class="metrics-row">

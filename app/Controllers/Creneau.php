@@ -6,7 +6,7 @@ use App\Models\CreneauModel;
 
 class Creneau extends BaseController
 {
-    public function index()
+    public function creneau_client()
     {
         $creneauModel = new CreneauModel();
 
@@ -33,5 +33,104 @@ class Creneau extends BaseController
         ];
 
         return view('client/creneaux', $data);
+    }
+
+    public function creneau_admin()
+    {
+        if (!session()->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/dashboard')->with('error', 'Accès refusé.');
+        }
+
+        $db = \Config\Database::connect();
+
+        $ressources = $db->table('ressources')
+            ->orderBy('nom', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        $creneaux = $db->table('creneaux c')
+            ->select('
+                c.id,
+                c.ressource_id,
+                c.date_debut,
+                c.date_fin,
+                c.places_dispo,
+                c.actif,
+                r.nom AS ressource_nom,
+                r.type AS ressource_type,
+                r.capacite
+            ')
+            ->join('ressources r', 'r.id = c.ressource_id')
+            ->orderBy('c.date_debut', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        return view('admin/creneaux', [
+            'ressources' => $ressources,
+            'creneaux'   => $creneaux,
+        ]);
+    }
+
+    public function creneau() {
+        if(!session()->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+        
+        if(session()->get('role') !== 'admin') {
+            return $this->creneau_client();
+        } else {
+            return $this->creneau_admin();
+        }
+    }
+
+    public function ajouter_creneau()
+    {
+        if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
+            return redirect()->to('/login');
+        }
+
+        $ressourceId  = $this->request->getPost('ressource_id');
+        $placesDispo  = $this->request->getPost('places_dispo');
+        $dateDebut    = $this->request->getPost('date_debut');
+        $dateFin      = $this->request->getPost('date_fin');
+
+        if (!$ressourceId || !$placesDispo || !$dateDebut || !$dateFin) {
+            return redirect()->back()->with('error', 'Veuillez remplir tous les champs.');
+        }
+
+        if (strtotime($dateFin) <= strtotime($dateDebut)) {
+            return redirect()->back()->with('error', 'La date de fin doit être après la date de début.');
+        }
+
+        $db = \Config\Database::connect();
+
+        $db->table('creneaux')->insert([
+            'ressource_id'  => $ressourceId,
+            'date_debut'    => str_replace('T', ' ', $dateDebut) . ':00',
+            'date_fin'      => str_replace('T', ' ', $dateFin) . ':00',
+            'places_dispo'  => $placesDispo,
+            'actif'         => 1,
+        ]);
+
+        return redirect()->to('/admin/creneaux')->with('success', 'Créneau ajouté avec succès.');
+    }
+
+    public function supprimer_creneau($id)
+    {
+        if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
+            return redirect()->to('/login');
+        }
+
+        $db = \Config\Database::connect();
+
+        $db->table('creneaux')
+            ->where('id', $id)
+            ->delete();
+
+        return redirect()->to('/admin/creneaux')->with('success', 'Créneau supprimé.');
     }
 }

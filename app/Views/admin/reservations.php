@@ -6,14 +6,14 @@
     <aside class="sidebar">
       <div class="sidebar-logo">Fit<span>Space</span> <span style="font-size:0.6rem;background:var(--accent);color:#fff;padding:2px 6px;border-radius:4px;vertical-align:middle;">Admin</span></div>
       <ul class="sidebar-nav" style="margin-top:1rem;">
-        <li><a href="#page-dashboard-admin"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
-        <li><a href="#page-admin-reservations" class="active"><i class="bi bi-bookmark-star-fill"></i> Réservations</a></li>
-        <li><a href="#page-admin-creneaux"><i class="bi bi-calendar-week-fill"></i> Créneaux</a></li>
-        <li><a href="#page-admin-clients"><i class="bi bi-people-fill"></i> Clients</a></li>
+        <li><a href="/dashboard"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
+        <li><a href="/reservation" class="active"><i class="bi bi-bookmark-star-fill"></i> Réservations</a></li>
+        <li><a href="/creneau"><i class="bi bi-calendar-week-fill"></i> Créneaux</a></li>
+        <li><a href="#"><i class="bi bi-people-fill"></i> Clients</a></li>
       </ul>
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="avatar" style="background:#0f3460;">AD</div>
+          <div class="avatar" style="background:#0f3460;"><?= strtoupper(substr($name, 0, 2)) ?></div>
           <div class="user-info"><div class="name">Admin</div><div class="role">Administrateur</div></div>
         </div>
       </div>
@@ -43,44 +43,69 @@
               <tr><th>Client</th><th>Créneau</th><th>Date réservation</th><th>Statut</th><th>Actions</th></tr>
             </thead>
             <tbody>
+              <?php foreach($reservations as $res): ?>
               <tr>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;font-size:0.65rem;">JD</div><div><div style="font-weight:600;font-size:0.875rem;">Jean Dupont</div><div style="font-size:0.75rem;color:var(--muted);">jean@email.com</div></div></div></td>
-                <td><div style="font-weight:500;font-size:0.875rem;">Yoga Détente</div><div style="font-size:0.75rem;color:var(--muted);">16 juin · 08h00 – 09h30</div></td>
-                <td class="td-muted">14 juin 2025 à 10h23</td>
-                <td><span class="badge-statut s-attente">en attente</span></td>
-                <td>
-                  <div class="action-btns">
-                    <button class="btn-sm-custom btn-confirm"><i class="bi bi-check"></i> Confirmer</button>
-                    <button class="btn-sm-custom btn-refuse"><i class="bi bi-x"></i> Refuser</button>
-                  </div>
-                </td>
+                  <td>
+                      <div style="display:flex;align-items:center;gap:8px;">
+                          <div class="avatar" style="width:28px;height:28px;font-size:0.65rem;">
+                              <?= strtoupper(substr($res['user_name'], 0, 2)) ?>
+                          </div>
+
+                          <div>
+                              <div style="font-weight:600;font-size:0.875rem;">
+                                  <?= esc($res['user_name']) ?>
+                              </div>
+                              <div style="font-size:0.75rem;color:var(--muted);">
+                                  <?= esc($res['user_email']) ?>
+                              </div>
+                          </div>
+                      </div>
+                  </td>
+
+                  <td>
+                      <div style="font-weight:500;font-size:0.875rem;">
+                          <?= esc($res['ressource_nom']) ?>
+                      </div>
+                      <div style="font-size:0.75rem;color:var(--muted);">
+                          <?= date('d M', strtotime($res['date_debut'])) ?>
+                          ·
+                          <?= date('H\hi', strtotime($res['date_debut'])) ?>
+                          –
+                          <?= date('H\hi', strtotime($res['date_fin'])) ?>
+                      </div>
+                  </td>
+
+                  <td class="td-muted">
+                      <?= date('d M Y à H\hi', strtotime($res['created_at'])) ?>
+                  </td>
+
+                  <td>
+                      <span class="badge-statut s-<?= esc($res['statut']) ?>">
+                          <?= esc($res['statut']) ?>
+                      </span>
+                  </td>
+
+                  <td>
+                      <?php if($res['statut'] === 'en_attente'): ?>
+                          <div class="action-btns">
+                              <a href="/confirmer/<?= $res['id'] ?>" class="btn-sm-custom btn-confirm">
+                                  <i class="bi bi-check"></i> Confirmer
+                              </a>
+
+                              <a href="/refuser/<?= $res['id'] ?>" class="btn-sm-custom btn-refuse">
+                                  <i class="bi bi-x"></i> Refuser
+                              </a>
+                          </div>
+                      <?php elseif($res['statut'] === 'confirmee'): ?>
+                          <a href="/annuler/<?= $res['id'] ?>" class="btn-sm-custom btn-cancel">
+                              <i class="bi bi-x"></i> Annuler
+                          </a>
+                      <?php else: ?>
+                          <span style="font-size:0.75rem;color:var(--muted);">—</span>
+                      <?php endif; ?>
+                  </td>
               </tr>
-              <tr>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;font-size:0.65rem;background:#0f3460;">MA</div><div><div style="font-weight:600;font-size:0.875rem;">Marie Andria</div><div style="font-size:0.75rem;color:var(--muted);">marie@email.com</div></div></div></td>
-                <td><div style="font-weight:500;font-size:0.875rem;">CrossFit Intensif</div><div style="font-size:0.75rem;color:var(--muted);">16 juin · 18h00 – 19h30</div></td>
-                <td class="td-muted">14 juin 2025 à 14h05</td>
-                <td><span class="badge-statut s-attente">en attente</span></td>
-                <td>
-                  <div class="action-btns">
-                    <button class="btn-sm-custom btn-confirm"><i class="bi bi-check"></i> Confirmer</button>
-                    <button class="btn-sm-custom btn-refuse"><i class="bi bi-x"></i> Refuser</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;font-size:0.65rem;background:#1a6b39;">SR</div><div><div style="font-weight:600;font-size:0.875rem;">Soa Rabe</div><div style="font-size:0.75rem;color:var(--muted);">soa@email.com</div></div></div></td>
-                <td><div style="font-weight:500;font-size:0.875rem;">Terrain squash</div><div style="font-size:0.75rem;color:var(--muted);">18 juin · 14h00 – 15h00</div></td>
-                <td class="td-muted">13 juin 2025 à 09h12</td>
-                <td><span class="badge-statut s-confirmee">confirmée</span></td>
-                <td><span style="font-size:0.75rem;color:var(--muted);">—</span></td>
-              </tr>
-              <tr>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;font-size:0.65rem;background:#534AB7;">TR</div><div><div style="font-weight:600;font-size:0.875rem;">Tsiry Rako</div><div style="font-size:0.75rem;color:var(--muted);">tsiry@email.com</div></div></div></td>
-                <td><div style="font-weight:500;font-size:0.875rem;">Salle musculation</div><div style="font-size:0.75rem;color:var(--muted);">17 juin · 10h00 – 12h00</div></td>
-                <td class="td-muted">12 juin 2025 à 16h48</td>
-                <td><span class="badge-statut s-refusee">refusée</span></td>
-                <td><span style="font-size:0.75rem;color:var(--muted);">—</span></td>
-              </tr>
+              <?php endforeach; ?>
             </tbody>
           </table>
         </div>

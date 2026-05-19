@@ -35,34 +35,41 @@
         <!-- Formulaire ajout créneau -->
         <div class="form-section">
           <h3><i class="bi bi-plus-circle" style="color:var(--accent);margin-right:6px;"></i>Ajouter un créneau</h3>
-          <form>
-            <div class="form-grid-2" style="margin-bottom:1rem;">
-              <div class="form-group">
-                <label class="form-label">Ressource</label>
-                <select class="select-custom">
-                  <option>Salle Zen</option>
-                  <option>Salle Cross</option>
-                  <option>Terrain squash A</option>
-                  <option>Bloc Muscu</option>
-                </select>
+          <form action="/admin/creneaux/ajouter" method="post">
+              <div class="form-grid-2" style="margin-bottom:1rem;">
+                  <div class="form-group">
+                      <label class="form-label">Ressource</label>
+                      <select name="ressource_id" class="select-custom" required>
+                          <?php foreach($ressources as $ressource): ?>
+                              <option value="<?= $ressource['id'] ?>">
+                                  <?= esc($ressource['nom']) ?> - <?= esc($ressource['type']) ?>
+                              </option>
+                          <?php endforeach; ?>
+                      </select>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="form-label">Nombre de places</label>
+                      <input type="number" name="places_dispo" class="form-control" min="1" required>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="form-label">Date et heure de début</label>
+                      <input type="datetime-local" name="date_debut" class="form-control" required>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="form-label">Date et heure de fin</label>
+                      <input type="datetime-local" name="date_fin" class="form-control" required>
+                  </div>
               </div>
-              <div class="form-group">
-                <label class="form-label">Nombre de places</label>
-                <input type="number" class="form-control" value="10" min="1" />
+
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                  <button type="submit" class="btn-submit">
+                      <i class="bi bi-plus"></i> Ajouter le créneau
+                  </button>
+                  <button type="reset" class="btn-secondary-custom">Réinitialiser</button>
               </div>
-              <div class="form-group">
-                <label class="form-label">Date et heure de début</label>
-                <input type="datetime-local" class="form-control" value="2025-06-16T08:00" />
-              </div>
-              <div class="form-group">
-                <label class="form-label">Date et heure de fin</label>
-                <input type="datetime-local" class="form-control" value="2025-06-16T09:30" />
-              </div>
-            </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-              <button type="submit" class="btn-submit"><i class="bi bi-plus"></i> Ajouter le créneau</button>
-              <button type="reset" class="btn-secondary-custom">Réinitialiser</button>
-            </div>
           </form>
         </div>
 
