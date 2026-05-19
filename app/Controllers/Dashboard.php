@@ -114,7 +114,7 @@ class Dashboard extends BaseController
                 c.date_debut,
                 c.date_fin,
                 ressources.nom AS ressource_nom,
-                ressources.type AS ressource_type,
+                ressources.type AS ressource_type
             ')
             ->join('users u', 'u.id = r.user_id')
             ->join('creneaux c', 'c.id = r.creneau_id')
@@ -122,6 +122,26 @@ class Dashboard extends BaseController
             ->where('r.statut !=', 'annulee')
             ->orderBy('r.created_at', 'DESC')
             ->limit(5)
+            ->get()
+            ->getResultArray();
+
+            // AJOUT : Statistiques d'occupation par numéro de semaine
+        $statsSemaines = $db->table('reservations')
+            ->select("strftime('%W', created_at) as semaine, COUNT(id) as total")
+            ->where('statut !=', 'annulee')
+            ->groupBy("strftime('%W', created_at)")
+            ->orderBy('semaine', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        // AJOUT : Top des ressources les plus réservées
+        $statsRessources = $db->table('reservations r')
+            ->select('res.nom as ressource_nom, COUNT(r.id) as total')
+            ->join('creneaux c', 'c.id = r.creneau_id')
+            ->join('ressources res', 'res.id = c.ressource_id')
+            ->where('r.statut !=', 'annulee')
+            ->groupBy('res.nom')
+            ->orderBy('total', 'DESC')
             ->get()
             ->getResultArray();
 
@@ -133,6 +153,8 @@ class Dashboard extends BaseController
             'reservationsRecentes' => $reservationsRecentes,
             'name'           => $name,
             'role'                => $role,
+            'statsSemaines'        => $statsSemaines,
+            'statsRessources'      => $statsRessources
         ];
 
         return view('admin/dashboard', $data);

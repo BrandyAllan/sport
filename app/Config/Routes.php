@@ -13,7 +13,7 @@ $routes->get('/creneau', 'Creneau::creneau');
 $routes->post('/ajouter-creneau', 'Creneau::ajouter_creneau');
 $routes->get('/supprimer-creneau/(:num)', 'Creneau::supprimer_creneau/$1');
 $routes->get('/editer-creneau/(:num)', 'Creneau::edit_creneau/$1');
-$routes->post('/editer-creneau/(:num)', 'Creneau::update_creneau/$1');
+$routes->post('/editer-creneau', 'Creneau::update_creneau');
 
 $routes->get('/register', 'Register::showRegister');
 $routes->post('/register', 'Register::doRegister');

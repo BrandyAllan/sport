@@ -1,7 +1,31 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-    <section id="page-dashboard-admin">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  /* Petite structure flexbox pour afficher les deux graphiques côte à côte proprement */
+  .charts-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .chart-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+  .chart-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #333;
+  }
+</style>
+
+<section id="page-dashboard-admin">
   <div class="app-wrapper">
 
     <aside class="sidebar">
@@ -29,8 +53,8 @@
             $initiales = mb_strtoupper($initiales); 
           ?>
           <div class="avatar" style="background:#0f3460;"><?= $initiales ?></div>
-          <div class="user-info"><div class="name"><?= $name ?></div><div class="role"><?= $role ?></div></div>
-          <a href="#page-login" style="margin-left:auto;color:rgba(255,255,255,0.3);font-size:1.1rem;"><i class="bi bi-box-arrow-right"></i></a>
+          <div class="user-info"><div class="name"><?= esc($name) ?></div><div class="role"><?= esc($role) ?></div></div>
+          <a href="/logout" style="margin-left:auto;color:rgba(255,255,255,0.3);font-size:1.1rem;"><i class="bi bi-box-arrow-right"></i></a>
         </div>
       </div>
     </aside>
@@ -45,7 +69,6 @@
 
       <div class="page-content">
 
-              <!-- Flash success -->
         <?php if(session()->getFlashdata('succes')): ?>
         <div class="flash-message flash-success">
           <i class="bi bi-check-circle-fill"></i>
@@ -84,7 +107,17 @@
           </div>
         </div>
 
-        <!-- Réservations récentes -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <h3>Taux d'occupation par semaine</h3>
+            <canvas id="occupationChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Ressources les plus réservées</h3>
+            <canvas id="resourcesChart"></canvas>
+          </div>
+        </div>
+
         <div class="data-card">
           <div class="data-card-header">
             <h3>Réservations récentes</h3>
@@ -108,11 +141,11 @@
                     $initiales = mb_strtoupper($initiales); 
                   ?>
                     <div class="avatar" style="width:28px;height:28px;font-size:0.65rem;"><?=$initiales?></div>
-                    <span class="td-name"><?=$res['client_nom']?></span>
+                    <span class="td-name"><?= esc($res['client_nom']) ?></span>
                   </div>
                 </td>
-                <td class="td-muted"><?=$res['ressource_type']?></td>
-                <td class="td-muted"><?=$res['date_debut']?></td>
+                <td class="td-muted"><?= esc($res['ressource_type']) ?></td>
+                <td class="td-muted"><?= date('d/m/Y H:i', strtotime($res['date_debut'])) ?></td>
                 <?php if($res['statut'] === 'en_attente') { ?>
                   <td><span class="badge-statut s-attente">en attente</span></td>
                   <td>
@@ -134,11 +167,82 @@
             </tbody>
           </table>
         </div>
-      </div>
 
       </div>
     </div>
   </div>
 </section>
+
+<script>
+    // 1. Évolution de l'occupation par semaine (Line Chart)
+    const statsSemaines = <?= json_encode($statsSemaines) ?>;
+    const labelsSemaines = statsSemaines.map(item => 'Semaine ' + item.semaine);
+    const dataSemaines = statsSemaines.map(item => item.total);
+
+    const ctxOccupation = document.getElementById('occupationChart').getContext('2d');
+    new Chart(ctxOccupation, {
+        type: 'line',
+        data: {
+            labels: labelsSemaines,
+            datasets: [{
+                label: 'Réservations',
+                data: dataSemaines, 
+                borderColor: '#3498db',
+                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { 
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1 // Force l'affichage des entiers uniquement (1, 2, 3...)
+                    }
+                }
+            }
+        }
+    });
+
+    // 2. Top ressources réservées (Horizontal Bar Chart)
+    const statsRessources = <?= json_encode($statsRessources) ?>;
+    const labelsRessources = statsRessources.map(item => item.ressource_nom);
+    const dataRessources = statsRessources.map(item => item.total);
+
+    const ctxResources = document.getElementById('resourcesChart').getContext('2d');
+    new Chart(ctxResources, {
+        type: 'bar',
+        data: {
+            labels: labelsRessources,
+            datasets: [{
+                label: 'Nombre de réservations',
+                data: dataRessources,
+                backgroundColor: [
+                    '#2ecc71',
+                    '#3498db',
+                    '#f39c12',
+                    '#e74c3c'
+                ],
+                borderWidth: 0,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            indexAxis: 'y', // Mode barres horizontales
+            responsive: true,
+            scales: {
+                x: { 
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1 // Force l'affichage des entiers uniquement (1, 2, 3...)
+                    }
+                }
+            }
+        }
+    });
+</script>
 
 <?= $this->endSection() ?>

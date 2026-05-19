@@ -6,9 +6,9 @@
     <aside class="sidebar">
       <div class="sidebar-logo">Fit<span>Space</span> <span style="font-size:0.6rem;background:var(--accent);color:#fff;padding:2px 6px;border-radius:4px;vertical-align:middle;">Admin</span></div>
       <ul class="sidebar-nav" style="margin-top:1rem;">
-        <li><a href="#page-dashboard-admin"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
-        <li><a href="#page-admin-reservations"><i class="bi bi-bookmark-star-fill"></i> Réservations</a></li>
-        <li><a href="#page-admin-creneaux" class="active"><i class="bi bi-calendar-week-fill"></i> Créneaux</a></li>
+        <li><a href="/dashboard"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
+        <li><a href="/reservation"><i class="bi bi-bookmark-star-fill"></i> Réservations</a></li>
+        <li><a href="/creneau" class="active"><i class="bi bi-calendar-week-fill"></i> Créneaux</a></li>
         <li><a href="#page-admin-clients"><i class="bi bi-people-fill"></i> Clients</a></li>
       </ul>
       <div class="sidebar-footer">
