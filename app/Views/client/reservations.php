@@ -1,6 +1,26 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
+<style>
+.custom-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
 
+.custom-modal-content{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    width:350px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+</style>
 
 <section id="page-mes-reservations">
   <div class="app-wrapper">
@@ -37,7 +57,46 @@
         </div>
     </div>
 </section>
+<div id="eventModal" class="custom-modal">
 
+    <div class="custom-modal-content">
+
+        <h3>Ajouter un événement</h3>
+
+        <input
+            type="text"
+            id="eventTitle"
+            placeholder="Titre"
+            class="form-control"
+        >
+
+        <input
+            type="time"
+            id="eventStart"
+            class="form-control"
+        >
+
+        <input
+            type="time"
+            id="eventEnd"
+            class="form-control"
+        >
+
+        <div style="display:flex;gap:10px;margin-top:15px;">
+
+            <button id="saveEventBtn" class="btn-submit">
+                Ajouter
+            </button>
+
+            <button id="closeModalBtn" class="btn-secondary-custom">
+                Annuler
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
@@ -47,16 +106,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const calendarEl = document.getElementById('calendar');
 
+    const modal = document.getElementById('eventModal');
+
+    const titleInput = document.getElementById('eventTitle');
+
+    const startInput = document.getElementById('eventStart');
+
+    const endInput = document.getElementById('eventEnd');
+
+    const saveBtn = document.getElementById('saveEventBtn');
+
+    const closeBtn = document.getElementById('closeModalBtn');
+
+    let selectedDate = null;
+
     const calendar = new FullCalendar.Calendar(calendarEl, {
 
         initialView: 'dayGridMonth',
+
         locale: 'fr',
 
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
+        firstDay: 1,
+
+        height: 'auto',
 
         headerToolbar: {
             left: 'prev,next today',
@@ -66,44 +138,89 @@ document.addEventListener('DOMContentLoaded', function () {
 
         events: '/events',
 
-        /*
-        |--------------------------------------------------------------------------
-        | Sélection avec heure
-        |--------------------------------------------------------------------------
-        */
-
         dateClick: function(info) {
-            let title = prompt("Titre de l'événement :");
-            if (!title) return;
 
-            let heureDebut = prompt("Heure de début ? Exemple : 14:00");
-            if (!heureDebut) return;
+            selectedDate = info.dateStr;
 
-            let heureFin = prompt("Heure de fin ? Exemple : 16:00");
-            if (!heureFin) return;
+            modal.style.display = 'flex';
+        }
+    });
 
-            let start = info.dateStr + "T" + heureDebut + ":00";
-            let end   = info.dateStr + "T" + heureFin + ":00";
+    saveBtn.addEventListener('click', function () {
 
-            fetch('/events/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body:
-                    'title=' + encodeURIComponent(title) +
-                    '&start=' + encodeURIComponent(start) +
-                    '&end=' + encodeURIComponent(end)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    calendar.refetchEvents();
-                } else {
-                    alert("Erreur lors de l'ajout.");
-                }
-            });
+        const title = titleInput.value.trim();
+
+        const startHour = startInput.value;
+
+        const endHour = endInput.value;
+
+        if (!title || !startHour || !endHour) {
+
+            alert('Veuillez remplir tous les champs');
+
+            return;
+        }
+
+        const start = selectedDate + 'T' + startHour + ':00';
+
+        const end = selectedDate + 'T' + endHour + ':00';
+
+
+        fetch('/events/save', {
+
+            method: 'POST',
+
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+
+            body:
+                'title=' + encodeURIComponent(title) +
+                '&start=' + encodeURIComponent(start) +
+                '&end=' + encodeURIComponent(end)
+        })
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            if (data.status === 'success') {
+
+                calendar.refetchEvents();
+
+                modal.style.display = 'none';
+
+                titleInput.value = '';
+
+                startInput.value = '';
+
+                endInput.value = '';
+
+            } else {
+
+                alert("Erreur lors de l'ajout.");
+            }
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            alert('Erreur serveur');
+        });
+    });
+
+    closeBtn.addEventListener('click', function () {
+
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function (e) {
+
+        if (e.target === modal) {
+
+            modal.style.display = 'none';
         }
     });
 
