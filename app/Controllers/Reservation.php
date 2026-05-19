@@ -41,9 +41,10 @@ class Reservation extends BaseController
         }
 
         $existing = $db->table('reservations')
-            ->where('user_id', $userId)
-            ->where('creneau_id', $creneauId)
-            ->first();
+                ->where('user_id', $userId)
+                ->where('creneau_id', $creneauId)
+                ->get()
+                ->getRowArray();
 
         if ($existing) {
 

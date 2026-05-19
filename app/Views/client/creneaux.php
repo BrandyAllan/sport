@@ -25,6 +25,18 @@
     
   </nav>
 
+  <?php if(session()->getFlashdata('error')): ?>
+
+      <div class="flash-message flash-error">
+
+          <i class="bi bi-exclamation-circle-fill"></i>
+
+          <?= session()->getFlashdata('error') ?>
+
+      </div>
+
+  <?php endif; ?>
+
   <div class="page-section">
     <div class="section-head">
       <h2>Créneaux disponibles</h2>
