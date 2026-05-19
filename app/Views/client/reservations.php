@@ -13,7 +13,7 @@
       </ul>
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="avatar"><?= strtoupper(substr($res['user_name'], 0, 2)) ?></div>
+          <div class="avatar"><?= strtoupper(substr($name, 0, 2)) ?></div>
           <div class="user-info"><div class="name"><?= $name ?></div><div class="role">Client</div></div>
           <a href="/logout" style="margin-left:auto;color:rgba(255,255,255,0.3);font-size:1.1rem;" title="Déconnexion"><i class="bi bi-box-arrow-right"></i></a>
         </div>
