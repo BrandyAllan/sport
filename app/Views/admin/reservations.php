@@ -9,7 +9,7 @@
         <li><a href="/dashboard"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
         <li><a href="/reservation" class="active"><i class="bi bi-bookmark-star-fill"></i> Réservations</a></li>
         <li><a href="/creneau"><i class="bi bi-calendar-week-fill"></i> Créneaux</a></li>
-        <li><a href="#"><i class="bi bi-people-fill"></i> Clients</a></li>
+        <li><a href="/liste-client"><i class="bi bi-people-fill"></i> Clients</a></li>
       </ul>
       <div class="sidebar-footer">
         <div class="sidebar-user">

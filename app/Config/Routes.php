@@ -29,3 +29,5 @@ $routes->get('/refuser/(:num)', 'Reservation::refuser/$1');
 $routes->get('/annuler/(:num)', 'Reservation::annuler/$1');
 
 $routes->get('/reservation', 'Reservation::reservation');
+
+$routes->get('/liste-client', 'Dashboard::clients');
